@@ -6,7 +6,9 @@
 --     the inline `prepend_keymap = [ { on = ..., run = ... } ]` form),
 --   * `ya.manager_emit` (removed in Yazi 26.x) -> `ya.emit`,
 --   * `run` arrays, quoted args and `--flag`/`--key=val` are handled.
--- `yazi pack -u` would overwrite this file; re-apply if that happens.
+-- Fork: github.com/salva-ferrer/command-palette.yazi (package.toml points to it).
+-- Also reads ~/.config/yazi/default-keymap.mgr.toml (vendored snapshot of Yazi's
+-- built-in [mgr] keymap, so default bindings show up in the palette).
 
 local function fail(s, ...)
 	ya.notify { title = "Command Palette", content = string.format(s, ...), timeout = 5, level = "error" }
@@ -21,7 +23,7 @@ end
 local PY = [==[
 import glob, os, sys, tomllib
 home = os.path.expanduser("~/.config/yazi")
-files = [os.path.join(home, "keymap.toml")] + sorted(glob.glob(os.path.join(home, "plugins", "**", "*.toml"), recursive=True))
+files = [os.path.join(home, "keymap.toml"), os.path.join(home, "default-keymap.mgr.toml")] + sorted(glob.glob(os.path.join(home, "plugins", "**", "*.toml"), recursive=True))
 def esc(s):
     return s.replace("\\", "\\\\").replace("\n", "\\n").replace("\t", "\\t")
 seen = set()
